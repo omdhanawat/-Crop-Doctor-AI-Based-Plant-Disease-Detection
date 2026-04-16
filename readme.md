@@ -1,70 +1,142 @@
-# Crop Disease Prediction: Edge ML Pipeline
+# 🌿 Crop Doctor — AI Plant Disease Detection
 
-An advanced, edge-optimized Deep Learning architecture designed to classify 38+ crop diseases in real-time. The system is built around a robust, multi-phase TensorFlow training pipeline that prioritizes high accuracy on out-of-distribution (real-world) data and features an automated cloud-based continuous learning loop.
+<div align="center">
 
----
+**Production-grade Android app that detects 38 plant diseases across 14 crops using on-device AI. Works fully offline.**
 
-## 🧠 Deep Learning Architecture & Training Strategy
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=flat&logo=flutter)](https://flutter.dev)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat&logo=tensorflow)](https://tensorflow.org)
+[![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=flat&logo=firebase)](https://firebase.google.com)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-Storage-3448C5?style=flat)](https://cloudinary.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=flat&logo=android)](https://android.com)
 
-The core model is designed to run completely offline on mobile devices via quantization to TensorFlow Lite, requiring a model that is both lightweight and highly accurate against noisy, real-world field conditions.
+[📄 Landing Page](#-landing-page) • [🚀 Quick Start](#-quick-start) • [📊 Model Performance](#-model-performance) • [🏗️ Architecture](#️-architecture) • [🤝 Contributing](#-contributing)
 
-### Smart Mixed Training (`smart_mixed_train.py`)
-To bridge the gap between lab-controlled datasets and real-world noisy backgrounds, the model employs a sophisticated tri-dataset fusion strategy:
-1. **PlantVillage Dataset:** Serves as the foundational base (38 classes).
-2. **Recomposed Data:** Generates synthetic images by cutting out leaves and pasting them on complex agricultural backgrounds.
-3. **Real-World Field Images:** Hard-mined, noisy datasets injected for ultimate robustness.
-
-**Training Optimizer Strategy:**
-* **Dynamic Weighting:** Real field images are weighted **3x higher** than synthetic/lab images. Underrepresented ("collapsed") classes automatically receive a **2x penalty boost**.
-* **Two-Phase Fine Tuning:** The network initially trains with a frozen frozen feature-extraction backbone to preserve generalized edge detection, before completely unfreezing for low-LR (`1e-5`) aggressive fine-tuning natively preventing catastrophic forgetting.
+</div>
 
 ---
 
-## ☁️ Continuous Learning (Cloud Feedback Loop)
+## 📄 Landing Page
 
-Model degradation is inevitable in agricultural ML due to shifting seasons, lighting conditions, and mutated disease expressions. This pipeline solves that via an active learning architectural loop (`retrain_from_feedback.py`).
+The project includes a premium, responsive landing page to showcase the application, features, and supported crops. 
 
-**The Automated Workflow:**
-1. **Edge Inference:** The Flutter app runs the `.tflite` model completely offline.
-2. **Telemetry & Validation:** Users flag predictions as "Correct" or "Wrong" giving the app ground truth data. The images and metadata sync to **Firebase Firestore** and **Cloudinary**.
-3. **Ingestion Script:** The retraining pipeline queries Firestore for validated edge cases and automatically downloads the images into their respective ground-truth class folders.
-4. **Phase 3 Fine-Tuning:** The model undergoes a precision micro-tuning sequence integrating the exact failure permutations from the app back into its neural weights, resulting in a smarter version generated for the next app update.
+### How to open
+Since this is a client-side project, you can view the landing page locally by following these steps:
+1. Navigate to the `landing_page/` directory.
+2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge).
+3. **Optional (Development):** Run `npx serve landing_page` to view it on a local server.
 
----
-
-## 🛠️ Project Execution & Scripts
-
-The `/src` directory houses the entire ML ecosystem.
-
-### Core Training Scripts
-* `train_disease_model.py`: The foundational Phase 1 architecture build.
-* `smart_mixed_train.py`: Initiates the mixed-weighting dataset routine balancing PlantVillage, Recomposed, and Real datasets.
-* `retrain_from_feedback.py`: Fetches and processes edge-case JSON metadata from Firebase and executes Phase 3 fine-tuning.
-
-### Utilities
-* `convert_to_tflite.py` / `quantize_tflite.py`: Compresses and quantizes the `.keras` architecture into the `~10MB` optimal format for the Flutter engine.
-* `recompose.py`: The programmatic augmentation pipeline merging leaves with synthetic real-world backgrounds.
-* `dataset_split.py`: Strict mathematical split ensuring zero data leakage between train/val/test pools.
+### Deployment Note
+Once you push this repository to GitHub, you can enable **GitHub Pages** in the repository settings and point it to the `/landing_page` folder to make it live instantly for free.
 
 ---
 
-## ⚙️ Requirements & Execution
+## 📊 Model Performance
 
-**Stack:** Python 3.9+, TensorFlow / Keras, OpenCV, Albumentations.
+### Core Model — Smart Mixed Training v2.0
 
-1. Init virtual environment and install ML toolkit:
-   ```bash
-   pip install -r requirenments.txt
-   ```
-2. Run automated Firebase feedback ingestion (requires `firebase_credentials.json` mapped to the workspace):
-   ```bash
-   # Dry-run telemetry check
-   python src/retrain_from_feedback.py --count-only
+Factual metrics extracted from the latest training logs (`models/smart_train_report.json`):
+
+| Dataset | Images Tested | Accuracy |
+|---|---|---|
+| PlantVillage (Clean Lab) | 54,305 | **99.18%** |
+| Real-world photos (Mixed) | 13,857 | **94.13%** |
+
+### Model Evolution
+
+| Version | Strategy | PV Accuracy | Real-world Accuracy |
+|---|---|---|---|
+| v1.0 | PlantVillage Only | 98.80% | ~45% |
+| v1.1 | Real Images (Naive Injection) | 66.83% | 78.88% |
+| **v2.0** | **Smart Mixed Weighted Training** | **99.18%** | **94.13%** |
+
+---
+
+## 🏗️ Architecture
+
+### 2-Stage Cascaded Inference Pipeline
+The application uses a high-performance, double-validation pipeline to ensure edge-case robustness:
+
+1. **Stage 1: Leaf Detector (`leaf_detector.tflite`)**
+   - **Architecture:** MobileNetV2 Binary Classifier.
+   - **Input:** 224x224x3 (Normalized -1 to 1).
+   - **Purpose:** Acts as a gatekeeper. If the confidence of "Leaf" is below 50%, the process terminates, preventing false classifications on hands, background, or equipment.
    
-   # Full ingest & retrain hook
-   python src/retrain_from_feedback.py
-   ```
-3. To rebuild the foundational model from scratch:
-   ```bash
-   python src/smart_mixed_train.py
-   ```
+2. **Stage 2: Disease Classifier (`disease_model.tflite`)**
+   - **Architecture:** MobileNetV2 38-class Classifier.
+   - **Input:** 224x224x3 (Normalized -1 to 1).
+   - **Optimization:** INT8 Weight Quantization (9.77MB).
+   - **Logic:** Performs granular diagnosis only if Stage 1 passes.
+
+### System Architecture & Cloud Feedback Loop
+
+```mermaid
+graph TD
+    A[Flutter App] -->|Offline Inference| B[TFLite Model]
+    A -->|User Feedback / Label| C[Firebase Firestore]
+    A -->|Edge Case Image| D[Cloudinary Storage]
+    C -->|Trigger Metadata| E[python src/retrain_from_feedback.py]
+    D -->|Download Images| E
+    E -->|Phase 3 Fine-Tuning| F[Update Neural Weights]
+    F -->|Export & Quantize| G[New .tflite Asset]
+    G -->|App Update| A
+```
+
+---
+
+## 🗂️ Project Structure
+
+```text
+Crop_Disease_Predection/
+├── crop_disease_app/          # Flutter Cross-Platform Client
+│   ├── lib/
+│   │   ├── screens/           # UI Layers (Camera Scan, Results)
+│   │   └── services/          # TFLite Inference & Cloud Sync logic
+│   └── assets/models/         # Compiled edge models (.tflite)
+├── src/                       # ML & DL Training Pipeline
+│   ├── smart_mixed_train.py   # Weighted Weighted Dataset Fusion
+│   ├── retrain_from_feedback.py # Automated Cloud Data Ingestion
+│   └── recompose.py           # Background Augmentation Engine
+├── models/                    # Validated Checkpoints & Training Reports
+├── landing_page/              # Responsive Web Page (index.html)
+└── requirements.txt           # ML Pipeline dependencies
+```
+
+---
+
+## 🚀 Quick Start (Machine Learning)
+
+### 1. Environment Setup
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run Training Pipeline
+To retrain or fine-tune the model with real-world weighting:
+```bash
+python src/smart_mixed_train.py
+```
+
+### 3. Continuous Learning Ingestion
+To fetch user-validated images from the cloud and prepare for Phase 3 training:
+```bash
+python src/retrain_from_feedback.py --count-only
+```
+
+---
+
+## ⚙️ Requirements
+
+- **Inference:** Android 6.0+ (Architecture arm64-v8a optimized).
+- **Training:** Python 3.9+, TensorFlow 2.10+, 8GB RAM minimum.
+
+---
+
+<div align="center">
+
+**Built for sustainable agriculture. Factual. Fast. Free.**
+
+[📄 Open Landing Page Local](landing_page/index.html) • [⭐ Star this project](https://github.com/dhananjay-sahu/Crop_Disease_Predection)
+
+</div>

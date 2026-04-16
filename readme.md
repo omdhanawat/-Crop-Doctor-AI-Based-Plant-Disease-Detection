@@ -8,7 +8,6 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat&logo=tensorflow)](https://tensorflow.org)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=flat&logo=firebase)](https://firebase.google.com)
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-Storage-3448C5?style=flat)](https://cloudinary.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=flat&logo=android)](https://android.com)
 
 </div>

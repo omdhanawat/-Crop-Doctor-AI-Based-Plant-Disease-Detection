@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=flat&logo=android)](https://android.com)
 
-[🌐 View Landing Page](landing_page/index.html) • [🚀 Quick Start](#-quick-start) • [📊 Model Performance](#-model-performance) • [🏗️ Architecture](#️-architecture) • [🤝 Contributing](#-contributing)
+[🌐 View Landing Page](docs/index.html) • [🚀 Quick Start](#-quick-start) • [📊 Model Performance](#-model-performance) • [🏗️ Architecture](#️-architecture)
 
 </div>
 
@@ -19,9 +19,9 @@
 
 ## 🌐 Landing Page
 
-[**👉 Click here to open the product landing page**](landing_page/index.html)
+[**👉 Click here to open the landing page**](docs/index.html)
 
-The project includes a premium, responsive landing page to showcase the application, features, and supported crops. Once pushed to GitHub, this can be instantly hosted via GitHub Pages.
+The project includes a premium, responsive landing page to showcase the application, features, and supported crops. Deployment is handled via GitHub Pages pointing to the `/docs` folder.
 
 ---
 
@@ -92,7 +92,7 @@ Crop_Disease_Predection/
 │   ├── retrain_from_feedback.py # Automated Cloud Data Ingestion
 │   └── recompose.py           # Background Augmentation Engine
 ├── models/                    # Validated Checkpoints & Training Reports
-├── landing_page/              # Responsive Web Page (index.html)
+├── docs/                      # Responsive Web Page (index.html)
 └── requirements.txt           # ML Pipeline dependencies
 ```
 
@@ -130,6 +130,6 @@ python src/retrain_from_feedback.py --count-only
 
 **Built for sustainable agriculture. Factual. Fast. Free.**
 
-[🌐 Open Landing Page](landing_page/index.html) • [⭐ Star this project](https://github.com/dhananjay-sahu/Crop_Disease_Predection)
+[🌐 Open Landing Page](docs/index.html) • [⭐ Star this project](https://github.com/dhananjay-sahu/Crop_Disease_Predection)
 
 </div>

@@ -11,24 +11,17 @@
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=flat&logo=android)](https://android.com)
 
-[📄 Landing Page](#-landing-page) • [🚀 Quick Start](#-quick-start) • [📊 Model Performance](#-model-performance) • [🏗️ Architecture](#️-architecture) • [🤝 Contributing](#-contributing)
+[🌐 View Landing Page](landing_page/index.html) • [🚀 Quick Start](#-quick-start) • [📊 Model Performance](#-model-performance) • [🏗️ Architecture](#️-architecture) • [🤝 Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📄 Landing Page
+## 🌐 Landing Page
 
-The project includes a premium, responsive landing page to showcase the application, features, and supported crops. 
+[**👉 Click here to open the product landing page**](landing_page/index.html)
 
-### How to open
-Since this is a client-side project, you can view the landing page locally by following these steps:
-1. Navigate to the `landing_page/` directory.
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge).
-3. **Optional (Development):** Run `npx serve landing_page` to view it on a local server.
-
-### Deployment Note
-Once you push this repository to GitHub, you can enable **GitHub Pages** in the repository settings and point it to the `/landing_page` folder to make it live instantly for free.
+The project includes a premium, responsive landing page to showcase the application, features, and supported crops. Once pushed to GitHub, this can be instantly hosted via GitHub Pages.
 
 ---
 
@@ -137,6 +130,6 @@ python src/retrain_from_feedback.py --count-only
 
 **Built for sustainable agriculture. Factual. Fast. Free.**
 
-[📄 Open Landing Page Local](landing_page/index.html) • [⭐ Star this project](https://github.com/dhananjay-sahu/Crop_Disease_Predection)
+[🌐 Open Landing Page](landing_page/index.html) • [⭐ Star this project](https://github.com/dhananjay-sahu/Crop_Disease_Predection)
 
 </div>
